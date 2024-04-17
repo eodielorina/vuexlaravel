@@ -27,8 +27,7 @@
                             <td>{{ stud.email }}</td>
                             <td>{{ stud.phone }}</td>
                             <td>
-                                <button class="btn btn-success mx-2" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal" @click="edit(stud.id)">Editer</button>
+                                <button class="btn btn-success mx-2" @click="edit(stud.id)">Editer</button>
                                 <button class="btn btn-danger" @click="del(stud.id)">supprimer</button>
 
                             </td>
@@ -38,7 +37,8 @@
             </div>
         </div>
         <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+            v-show="isModalVisible">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -74,7 +74,9 @@
     </div>
 </template>
 <script>
-
+// import $ from "jquery";
+import * as $ from "jquery";
+import * as bootstrap from "bootstrap";
 export default {
     name: 'student',
     data() {
@@ -84,7 +86,7 @@ export default {
                 phone: '',
                 email: ''
             },
-
+            isModalVisible: false,
             modal_title: 'Ajouter'
         }
     },
@@ -115,8 +117,10 @@ export default {
         },
         edit(id) {
             console.log(id);
-            this.modal_title = "Modification"; -
-                this.$store.dispatch('editField', id);
+            this.modal_title = "Modification";
+            this.$store.dispatch('editField', id);
+            this.isModalVisible = true;
+            $('#exampleModal').modal('show');
         }
 
     }

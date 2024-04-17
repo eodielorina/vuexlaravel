@@ -58,7 +58,8 @@ class StudentController extends Controller
      */
     public function show($id)
     {
-        //
+        $article=Student::find($id);
+        return response()->json($article);
     }
 
     /**
