@@ -15,12 +15,12 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <RouterLink class="nav-link active" to="/">Home</RouterLink>
               </li>
               <li class="nav-item">
                 <RouterLink class="nav-link active" to="/about">About</RouterLink>
-              </li>
+              </li> -->
               <li class="nav-item">
                 <RouterLink class="nav-link active" to="/student">Students</RouterLink>
               </li>

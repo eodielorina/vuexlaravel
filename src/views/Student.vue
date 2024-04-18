@@ -4,7 +4,8 @@
         <div class="card">
             <div class="card-header">
                 <h4>Students
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                        @click="add">
                         Add Student
                     </button>
                 </h4>
@@ -77,6 +78,7 @@
 // import $ from "jquery";
 import * as $ from "jquery";
 import * as bootstrap from "bootstrap";
+import { mapActions } from "vuex";
 export default {
     name: 'student',
     data() {
@@ -100,20 +102,33 @@ export default {
         this.$store.dispatch('sudentListe')
     },
     methods: {
-        save() {
-            this.$store.dispatch('addaction', this.student)
-                .then(response => {
-                    console.log(response)
-                    this.student.name = '';
-                    this.student.phone = '';
-                    this.student.email = '';
-                }).catch(error => {
-                    console.log(error)
-                })
+
+        ...mapActions(['addaction', 'deleteField']),
+        save(e) {
+            e.preventDefault();
+            this.addaction(this.student)
+
+        },
+        //     if (!this.student.id) {
+        //         // this.$store.dispatch('addaction', {
+        //         //     name: this.student.name,
+        //         //     phone: this.student.phone,
+        //         //     email: this.student.email
+        //         // })
+        //     } else { this.update(); }
+        // },
+        add() {
+            this.student = {
+                name: '',
+                phone: '',
+                email: ''
+            }
         },
         del(id) {
             console.log(id)
-            this.$store.dispatch('deleteField', id);
+            alert('Voulez vous supprimez vraiment?')
+            this.deleteField(id);
+            // this.$store.dispatch('deleteField', id);
         },
         edit(id) {
             console.log(id);
@@ -121,6 +136,9 @@ export default {
             this.$store.dispatch('editField', id);
             this.isModalVisible = true;
             $('#exampleModal').modal('show');
+        },
+        update() {
+            this.$store.dispatch('updateField');
         }
 
     }

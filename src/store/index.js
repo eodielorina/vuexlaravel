@@ -14,14 +14,18 @@ const store = new createStore({
   },
   getters: {},
   mutations: {
-    setStatut(state, status) {
+    Add(state, name, phone, email, student) {
+      state.students.unshift(student);
+      // state.students.push({ name: name, phone: phone, email: email });
+    },
+    Status(state, status) {
       state.status = status;
     },
     liste(state, students) {
       state.students = students;
     },
-    supprimer(state, student) {
-      state.student.id = student.id;
+    supprimer(state, id) {
+      state.students = state.students.filter((student) => student.id !== id);
     },
     edit(state, student) {
       console.log((state.student = student));
@@ -33,7 +37,7 @@ const store = new createStore({
         .post(url + "/api/student", student)
         .then((response) => {
           console.log(response);
-          commit("setStatut", "created");
+          commit("Add");
         })
         .catch((error) => {
           console.log(error);
@@ -48,7 +52,7 @@ const store = new createStore({
     deleteField({ commit }, id) {
       console.log(id);
       axios.delete(url + `/api/student/${id}`);
-      commit("supprimer", student);
+      commit("supprimer", id);
     },
     editField({ commit }, id) {
       console.log(id);
@@ -56,6 +60,10 @@ const store = new createStore({
         console.log(response.data);
         commit("edit", response.data);
       });
+    },
+    updateField({ commit }, id) {
+      axios.put(url + "/api/student" + id);
+      commit("Status", "uptaded");
     },
   },
 });
