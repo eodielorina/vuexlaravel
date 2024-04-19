@@ -14,12 +14,13 @@ const store = new createStore({
   },
   getters: {},
   mutations: {
-    Add(state, name, phone, email, student) {
-      state.students.unshift(student);
-      // state.students.push({ name: name, phone: phone, email: email });
+    Add(state, name, phone, email) {
+      // state.students.unshift(student);
+
+      state.students.push({ name: name, phone: phone, email: email });
     },
-    Status(state, status) {
-      state.status = status;
+    Update(state, student) {
+      state.student = student;
     },
     liste(state, students) {
       state.students = students;
@@ -28,7 +29,7 @@ const store = new createStore({
       state.students = state.students.filter((student) => student.id !== id);
     },
     edit(state, student) {
-      console.log((state.student = student));
+      state.student = student;
     },
   },
   actions: {
@@ -55,15 +56,13 @@ const store = new createStore({
       commit("supprimer", id);
     },
     editField({ commit }, id) {
-      console.log(id);
       axios.get(url + "/api/student/" + id).then((response) => {
-        console.log(response.data);
         commit("edit", response.data);
       });
     },
-    updateField({ commit }, id) {
-      axios.put(url + "/api/student" + id);
-      commit("Status", "uptaded");
+    updateField({ commit }, student) {
+      axios.put(url + "/api/student/" + student.id, student);
+      commit("Update", student);
     },
   },
 });

@@ -58,8 +58,8 @@ class StudentController extends Controller
      */
     public function show($id)
     {
-        $article=Student::find($id);
-        return response()->json($article);
+        $student=Student::find($id);
+        return response()->json($student);
     }
 
     /**
@@ -70,8 +70,8 @@ class StudentController extends Controller
      */
     public function edit($id)
     {
-        $article=Student::find($id);
-        return response()->json($article);
+        $student=Student::find($id);
+        return response()->json($student);
     }
 
     /**
@@ -83,12 +83,16 @@ class StudentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $article= Student::find($id);
-        $article->update([
-            'name'=>$request->name,
-            'phone'=>$request->phone,
-            'email'=>$request->email
-        ]);
+        // $student= Student::find($id);
+      
+       
+            
+            Student::where('id', $id)->update([
+                'name'=>$request->name,
+                'phone'=>$request->phone,
+                'email'=>$request->email
+            ]);
+      
         return response()->json(['message'=>'Modification avec succes']);
     }
 

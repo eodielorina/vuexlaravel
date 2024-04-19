@@ -10,6 +10,7 @@
                     </button>
                 </h4>
             </div>
+            <p class="visibilite" style="display: none;">{{ getstudent }}</p>
             <div class="card-body">
                 <table class="table table-bordered">
                     <thead>
@@ -22,13 +23,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="stud in liste" :key="stud.id">
+                        <tr v-for="(stud, index) in students" :key="index">
                             <td>{{ stud.id }}</td>
                             <td>{{ stud.name }}</td>
                             <td>{{ stud.email }}</td>
                             <td>{{ stud.phone }}</td>
                             <td>
-                                <button class="btn btn-success mx-2" @click="edit(stud.id)">Editer</button>
+                                <button class="btn btn-success mx-2" @click="edit(stud.id);" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal">Editer</button>
                                 <button class="btn btn-danger" @click="del(stud.id)">supprimer</button>
 
                             </td>
@@ -47,10 +49,14 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form method="post" id="formulaire" v-on:submit.prevent="save" enctype="multipart/form-data">
+                        <form method="post" id="formulaire" v-on:submit.prevent="save(id)"
+                            enctype="multipart/form-data">
                             <div class="form-group">
                                 <label for="nom">Nom</label>
                                 <input type="text" class="form-control" name="name" v-model="student.name">
+                                <input type="hidden" class="form-control" name="id" v-model="student.id">
+
+
                             </div>
                             <div class="form-group">
                                 <label for="email">Email</label>
@@ -78,12 +84,13 @@
 // import $ from "jquery";
 import * as $ from "jquery";
 import * as bootstrap from "bootstrap";
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 export default {
     name: 'student',
     data() {
         return {
             student: {
+                id: '',
                 name: '',
                 phone: '',
                 email: ''
@@ -93,52 +100,66 @@ export default {
         }
     },
     computed: {
-        liste() {
-            return this.$store.state.students
-        }
+        // liste() {
+        //     return this.$store.state.students
+        // },
+        getstudent() {
 
+            return this.student = this.$store.state.student;
+        },
+        ...mapState(["students"])
     },
     mounted() {
-        this.$store.dispatch('sudentListe')
+        // this.$store.dispatch('sudentListe')
+        this.sudentListe();
     },
     methods: {
 
-        ...mapActions(['addaction', 'deleteField']),
-        save(e) {
-            e.preventDefault();
-            this.addaction(this.student)
+        ...mapActions(['addaction', 'deleteField', 'sudentListe', 'editField']),
+        enregistrer() {
 
+            this.addaction(this.student);
+
+            //         // this.$store.dispatch('addaction', {
+            //         //     name: this.student.name,
+            //         //     phone: this.student.phone,
+            //         //     email: this.student.email
+            //         // })
+            this.sudentListe();
         },
-        //     if (!this.student.id) {
-        //         // this.$store.dispatch('addaction', {
-        //         //     name: this.student.name,
-        //         //     phone: this.student.phone,
-        //         //     email: this.student.email
-        //         // })
-        //     } else { this.update(); }
-        // },
+        save() {
+            if (!this.student.id) {
+                this.enregistrer();
+            } else { this.update(); }
+        },
+
         add() {
             this.student = {
-                name: '',
-                phone: '',
-                email: ''
-            }
+            };
+            this.modal_title = "Ajouter";
         },
         del(id) {
             console.log(id)
-            alert('Voulez vous supprimez vraiment?')
+            confirm('Voulez vous supprimez vraiment?')
             this.deleteField(id);
             // this.$store.dispatch('deleteField', id);
         },
         edit(id) {
-            console.log(id);
+            // console.log(id);
             this.modal_title = "Modification";
-            this.$store.dispatch('editField', id);
-            this.isModalVisible = true;
-            $('#exampleModal').modal('show');
+            // this.$store.dispatch('editField', id);
+            this.editField(id);
         },
         update() {
-            this.$store.dispatch('updateField');
+            // console.log(this.student.id)
+            const studentData = {
+                id: this.student.id,
+                name: this.student.name,
+                phone: this.student.phone,
+                email: this.student.email
+            }
+            this.$store.dispatch('updateField', studentData);
+            this.sudentListe();
         }
 
     }
